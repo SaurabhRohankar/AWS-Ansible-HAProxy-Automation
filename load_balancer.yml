@@ -1,0 +1,26 @@
+- hosts: tag_use_lb
+  vars:
+          host_servers: "{{ groups['tag_use_webs'] }}"
+  vars_prompt:
+          - name: "port"
+            prompt: "Enter port number for load balancer "
+            private: no
+
+  tasks:
+  -  name: "Installing haproxy"
+     package:
+             name: "haproxy"
+             state: present
+
+  -  name: "templating config file"
+     template:
+             src: "haproxy.cfg"
+             dest: "/etc/haproxy/haproxy.cfg"
+     notify: restart service
+
+  handlers:
+          -  name: "restart service"
+             service:
+                     name: "haproxy"
+                     state: restarted
+                     #enabled: yes

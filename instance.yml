@@ -1,0 +1,40 @@
+- hosts: localhost
+  tasks: 
+  - name: "launching ec2 instance"
+    ec2:
+             region: ap-south-1
+             image: ami-08e0ca9924195beba
+             instance_type: t2.micro
+             wait: true
+             count: 1
+             vpc_subnet_id: subnet-1e6e6776
+             group_id: sg-06f1960bcbf8aa950
+             key_name: key_name
+             assign_public_ip: yes
+             instance_tags:
+                     Name: load_balncer
+                     use: lb
+             state: present
+             aws_access_key: AWS_ACCESS_KEY_ID
+             aws_secret_key: AWS_SECRET_KEY
+    register: loadb
+
+  - name: "launching ec2 instance for backend servers"
+    ec2:
+             region: ap-south-1
+             image: ami-08e0ca9924195beba
+             instance_type: t2.micro
+             wait: true
+             count: 2
+             vpc_subnet_id: subnet-1e6e6776
+             group_id: sg-06f1960bcbf8aa950
+             key_name: key_name
+             assign_public_ip: yes
+             instance_tags:
+                     Name: web_server
+                     use: webs
+             state: present
+             aws_access_key: AWS_ACCESS_KEY_ID
+             aws_secret_key: AWS_SECRET_KEY
+    register: web_ser
+

@@ -1,0 +1,23 @@
+- hosts: tag_use_webs
+  vars:
+          host_name: "{{ ansible_hostname }}"
+  tasks:
+  -  name: "installing apachw"
+     package:
+             name: "httpd"
+             state: present
+
+  -  name: "Copying sample page"
+     copy:
+             dest: "/var/www/html/test.html"
+             content: "This is a  {{ host_name }} server"
+     notify: restart service
+
+  handlers:
+  -  name: "restart service"
+     service:
+             name: "httpd"
+             state: restarted
+
+
+
